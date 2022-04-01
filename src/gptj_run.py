@@ -1,5 +1,9 @@
-from transformers import GPTJForCausalLM
+#!/usr/bin/env python3
+
+
+from transformers import GPTJForCausalLM, AutoTokenizer
 import torch
+import sys
 
 model = GPTJForCausalLM.from_pretrained(
     "EleutherAI/gpt-j-6B", revision="float16", torch_dtype=torch.float16, low_cpu_mem_usage=True
@@ -7,12 +11,19 @@ model = GPTJForCausalLM.from_pretrained(
 
 tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-j-6B")
 
-
 prompt = (
     "In a shocking finding, scientists discovered a herd of unicorns living in a remote, "
     "previously unexplored valley, in the Andes Mountains. Even more surprising to the "
     "researchers was the fact that the unicorns spoke perfect English."
 )
+
+print(len(sys.argv))
+
+if len(sys.argv) > 1:
+    prompt = [sys.argv[i] for i in range(1,len(sys.argv))]
+    prompt = ' '.join(prompt)
+
+print (prompt)
 
 input_ids = tokenizer(prompt, return_tensors="pt").input_ids
 
