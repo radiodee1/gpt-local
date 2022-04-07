@@ -6,7 +6,8 @@ import torch
 import sys
 
 model = GPTJForCausalLM.from_pretrained(
-    "EleutherAI/gpt-j-6B", revision="float16", torch_dtype=torch.float16, low_cpu_mem_usage=True
+    "EleutherAI/gpt-j-6B",
+
 )
 
 tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-j-6B")
@@ -25,12 +26,18 @@ if len(sys.argv) > 1:
 
 print (prompt)
 
-input_ids = tokenizer(prompt, return_tensors="pt").input_ids
+while True:
 
-gen_tokens = model.generate(
-    input_ids,
-    do_sample=True,
-    temperature=0.9,
-    max_length=100,
-)
-gen_text = tokenizer.batch_decode(gen_tokens)[0]
+    input_ids = tokenizer(prompt, return_tensors="pt").input_ids
+
+    gen_tokens = model.generate(
+        input_ids,
+        do_sample=True,
+        temperature=0.9,
+        max_length=100,
+    )
+    gen_text = tokenizer.batch_decode(gen_tokens)[0]
+
+    print(gen_text)
+
+    prompt = input("> ")
